@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Petice: Maid outfit pro Michala Karcola</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f6f4ff; 
+            margin: 0; 
+            padding: 0;
+        }
+        .container {
+            background: #fff;
+            max-width: 420px;
+            margin: 40px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.11);
+            border-radius: 14px;
+            padding: 32px 24px 24px 24px;
+        }
+        h1 {
+            color: #9c27b0;
+            font-size: 1.6em;
+            margin-top: 0;
+        }
+        p {
+            font-size: 1.07em;
+        }
+        form {
+            margin-top: 25px;
+        }
+        input, button {
+            margin-top: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 9px;
+            font-size: 1em;
+            border-radius: 7px;
+            border: 1px solid #bbb;
+        }
+        button {
+            background: #9c27b0;
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        button:hover {
+            background: #7b1fa2;
+        }
+        .sign-list {
+            margin-top: 28px;
+            padding: 10px 0 0 0;
+            border-top: 1px solid #eee;
+        }
+        .sign-list h2 {
+            font-size: 1.1em;
+            color: #555;
+            margin: 0 0 11px 0;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        li {
+            margin-bottom: 6px;
+            background: #f3eaff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.97em;
+        }
+        .success {
+            color: #388e3c;
+            margin-top: 10px;
+            font-size: 1em;
+        }
+        @media (max-width: 500px) {
+            .container { padding: 18px 6px 15px 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Petice: Maid outfit pro Míšu Charcoala</h1>
+        <p>
+            My, níže podepsaní, požadujeme, aby <b>Míša Charcoal</b> začal nosit <b>maid outfit</b> při veřejných příležitostech. Připojte svůj podpis k této důležité iniciativě!
+        </p>
+        <form id="petition-form" autocomplete="off">
+            <input type="text" id="name" placeholder="Vaše jméno" required maxlength="30">
+            <button type="submit">Podepsat</button>
+            <div id="success-msg" class="success" style="display:none;"></div>
+        </form>
+        <div class="sign-list">
+            <h2>Podpisy:</h2>
+            <ul id="signatures">
+                <!-- podpisy zde -->
+            </ul>
+        </div>
+    </div>
+    <img src="./imgs/míša.gif" alt="Míša Charcoal" style="display: block; margin: 0 auto; max-width: 100%; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.11);">
+    <footer style="text-align: center; margin-top: 20px; color: #777; font-size: 0.9em;">
+        <p>Petice vytvořena s láskou pro Míšu Charcoala</p>
+        <p>© 2026 - Všechna práva vyhrazena</p>
+    </footer>
+    <script>
+        const form = document.getElementById('petition-form');
+        const nameInput = document.getElementById('name');
+        const sigList = document.getElementById('signatures');
+        const msg = document.getElementById('success-msg');
+
+        // načíst podpisy z localStorage
+        function loadSigs() {
+            const sigs = JSON.parse(localStorage.getItem('petice-maid-sigs') || "[]");
+            sigList.innerHTML = '';
+            sigs.forEach(n => {
+                let li = document.createElement('li');
+                li.textContent = n;
+                sigList.appendChild(li);
+            });
+        }
+        loadSigs();
+
+        form.onsubmit = e => {
+            e.preventDefault();
+            let jmeno = nameInput.value.trim();
+            if(jmeno.length < 2) {
+                msg.style.display = 'block';
+                msg.style.color = "#c62828";
+                msg.textContent = "Zadejte prosím platné jméno.";
+                return;
+            }
+            // přidat podpis
+            let sigs = JSON.parse(localStorage.getItem('petice-maid-sigs') || "[]");
+            if (sigs.includes(jmeno)) {
+                msg.style.display = 'block';
+                msg.style.color = "#c62828";
+                msg.textContent = "Toto jméno již je podepsáno!";
+                return;
+            }
+            sigs.unshift(jmeno); // nejnovější nahoře
+            localStorage.setItem('petice-maid-sigs', JSON.stringify(sigs));
+            loadSigs();
+            nameInput.value = '';
+            msg.style.display = 'block';
+            msg.style.color = "#388e3c";
+            msg.textContent = "Děkujeme za podpis!";
+            setTimeout(()=>{msg.style.display='none'},1800);
+        };
+    </script>
+</body>
+</html>
